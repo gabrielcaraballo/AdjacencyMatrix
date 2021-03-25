@@ -1,4 +1,6 @@
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 //change the class name
@@ -60,26 +62,35 @@ public class Partners {
 		numberOfAirlines = file.nextInt();
 		file.nextLine();
 
+		System.out.println(Arrays.toString(airlineList));
+
 		// Is it connected?
 		for (int i = 0; i < numberOfAirlines; i++) {
 			String[] partners = file.nextLine().split(" ");
 			int a = getNumFromAirline(partners[0]);
 			int b = getNumFromAirline(partners[1]);
-			recur(a, b);
+			if (matrix[a][b] == 1) {
+				System.out.println(true);
+			} else
+				System.out.println(recur(a, b, new ArrayList<Integer>()));
 		}
 	}
 
-	public void recur(int numOfAirline, int numOfTarget) {
-		for (int i = 0; i < matrix[numOfAirline].length; i++) {
-			if (i == numOfTarget && matrix[numOfAirline][i] == 1) {
-				System.out.println("FOUND");
-				return;
-			} else {
-				if (matrix[numOfAirline][i] == 1) {
-					recur(i, numOfTarget);
-				}
+	public boolean recur(int current, int target, ArrayList<Integer> doneAirlines) {
+		if (matrix[current][target] == 1) {
+			return true;
+		}
+		if (doneAirlines.contains(current)) {
+			return false;
+		}
+		doneAirlines.add(current);
+		for (int i : matrix[current]) {
+			if (recur(i, target, doneAirlines)) {
+				return true;
 			}
 		}
+		return false;
+
 	}
 
 	public static void main(String[] args) throws Exception {
